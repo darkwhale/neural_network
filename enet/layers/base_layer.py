@@ -38,3 +38,12 @@ class Layer(object):
 
     def backward(self, **k_args):
         pass
+
+    def get_input_shape(self):
+        pass
+
+    def get_output_shape(self):
+        pass
+
+    def get_layer_type(self):
+        pass

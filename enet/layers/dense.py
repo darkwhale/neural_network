@@ -9,18 +9,16 @@ class Dense(Layer):
     全连接神经网络类
     """
 
-    def __init__(self, kernel_size=None, activation=None, use_bias=True, input_shape=None):
+    def __init__(self, kernel_size=None, activation=None, input_shape=None):
         """
         :param kernel_size: 神经元个数
         :param activation: 激活函数
-        :param use_bias: 是否使用偏执
         :param input_shape: 输入shape，只在输入层有效；
         """
         super(Dense, self).__init__()
 
         self.kernel_size = kernel_size
         self.activation = activation
-        self.use_bias = use_bias
 
         self.layer_type = "dense"
 
@@ -50,7 +48,7 @@ class Dense(Layer):
     def build(self, input_shape, optimizer="sgd",  momentum=0.9, **k_args):
         """
         根据input_shape来构建网络模型参数
-        :param momentum: 冲量值，适用与optimizer为momentum
+        :param momentum: 冲量值，适用于optimizer为momentum
         :param optimizer: 优化器
         :param input_shape: 输入形状
         :return: 无返回值
@@ -66,14 +64,12 @@ class Dense(Layer):
 
         shape = (last_dim, self.kernel_size)
 
-        self.kernel = self.add_weight(shape=shape, initializer="normal")
+        self.kernel = self.add_weight(shape=shape, initializer="normal", node_num=input_shape)
+        self.bias = self.add_weight(shape=(self.kernel_size,), initializer="zero")
 
         if self.optimizer == "momentum":
             self.last_delta_w = np.zeros(shape=shape)
             self.last_delta_b = np.zeros(shape=(self.kernel_size,))
-
-        if self.use_bias:
-            self.bias = self.add_weight(shape=(self.kernel_size,), initializer="zero")
 
     def forward(self, input_signal, train=False):
         """
