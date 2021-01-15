@@ -8,7 +8,7 @@ def softmax(input_signal):
     :return:
     """
     input_signal = input_signal - np.max(input_signal)
-    return np.exp(input_signal) / np.sum(np.exp(input_signal), axis=-1).reshape(-1, 1)
+    return np.exp(input_signal) / np.sum(np.exp(input_signal), axis=-1, keepdims=True)
 
 
 def softmax_derive(delta, input_signal):
