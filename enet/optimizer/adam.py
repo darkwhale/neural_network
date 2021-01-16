@@ -1,15 +1,20 @@
 import numpy as np
 
 
-class AutoGrad(object):
+class Adam(object):
     """
     momentum优化器
     """
 
-    def __init__(self, **k_args):
+    def __init__(self, beta1=0.9, beta2=0.999, **k_args):
 
-        self.h = dict()
+        self.m = dict()
+        self.v = dict()
         self.params = dict()
+
+        self.iter = 0
+        self.beta1 = beta1
+        self.beta2 = beta2
 
     def grand(self, **k_args):
         """
@@ -20,7 +25,8 @@ class AutoGrad(object):
         for key, array in k_args.items():
             if key not in self.params:
                 self.params[key] = np.zeros_like(array)
-                self.h[key] = np.zeros_like(array)
+                self.m[key] = np.zeros_like(array)
+                self.v[key] = np.zeros_like(array)
 
             self.params[key] += array
 
@@ -31,10 +37,17 @@ class AutoGrad(object):
         :param args: 需要取出的梯度
         :return:
         """
+
+        self.iter += 1
+
+        lr_t = lr * np.sqrt(1.0 - self.beta2 ** self.iter) / (1.0 - self.beta1 ** self.iter)
+
         result_list = []
         for key in args:
-            self.h[key] += self.params[key] * self.params[key]
-            result = - lr * self.params[key] / (np.sqrt(self.h[key]) + 1e-7)
+            self.m[key] = (1 - self.beta1) * (self.params[key] - self.m[key])
+            self.v[key] = (1 - self.beta2) * (self.params[key] ** 2 - self.v[key])
+
+            result = - lr_t * self.m[key] / np.sqrt(self.v[key] + 1e-7)
             result_list.append(result)
 
             # 更新完后需要将params的梯度置为0

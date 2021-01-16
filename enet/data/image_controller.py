@@ -6,7 +6,7 @@ import pickle
 from enet.utils.util import train_test_split
 
 
-class DataHandler(object):
+class ImageHandler(object):
     """
     数据集载入控制类，传入参数为目录，并且目录满足以下特征：
     1. 目录下所有文件都是两级结构，比如 class1/file1.png

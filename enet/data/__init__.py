@@ -1,1 +1,1 @@
-from enet.data.data_controller import DataHandler
+from enet.data.image_controller import ImageHandler

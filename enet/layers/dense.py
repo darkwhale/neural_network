@@ -21,6 +21,7 @@ class Dense(Layer):
         super(Dense, self).__init__()
 
         assert activation in {None, "sigmoid", "relu", "softmax"}
+        assert optimizer in {"sgd", "momentum", "adagrad", "adam", "rmsprop"}
 
         self.output_shape = kernel_size
         self.activation = activation
@@ -35,7 +36,6 @@ class Dense(Layer):
         self.bias = None
 
         # self.use_bias = use_bias
-        assert optimizer in {"sgd", "momentum", "autograd", "adam"}
         self.optimizer = optimizer_dict[optimizer](**k_args)
 
     def build(self, input_shape):
@@ -54,7 +54,7 @@ class Dense(Layer):
         self.weight = self.add_weight(shape=shape, initializer="normal", node_num=input_shape)
         self.bias = self.add_weight(shape=(self.output_shape,), initializer="zero")
 
-    def forward(self, input_signal):
+    def forward(self, input_signal, *args, **k_args):
         """
         前向传播
         :param input_signal: 输入信息

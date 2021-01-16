@@ -117,16 +117,17 @@ class Sequential(object):
         for result in result_list:
             print(result)
 
-    def forward(self, input_data=None):
+    def forward(self, input_data=None, train=True):
         """
         前向运算
+        :param train: 是否为训练模式
         :param input_data: 输入数据
         :return: 返回输出
         """
         output_signal = input_data
 
         for index, layer in enumerate(self.layer_list):
-            output_signal = layer.forward(output_signal)
+            output_signal = layer.forward(output_signal, train=train)
 
         return output_signal
 
@@ -137,7 +138,7 @@ class Sequential(object):
         :return:
         """
         # 添加softmax层
-        output_signal = self.forward(input_data)
+        output_signal = self.forward(input_data, train=False)
         return softmax(output_signal)
 
     def predict_class(self, input_data, class_dict=None):
@@ -147,7 +148,7 @@ class Sequential(object):
         :param class_dict: 标签对应的种类字典，如果为空，则只输出标签
         :return: 预测标签
         """
-        output_signal = self.forward(input_data)
+        output_signal = self.forward(input_data, train=False)
 
         # 延列方向取最大的索引
         result_array = np.argmax(output_signal, axis=-1)
@@ -211,7 +212,7 @@ class Sequential(object):
             for index in range(0, len(train_data), batch):
                 batch_data, batch_label = train_data[index: index + batch], train_label[index: index + batch]
 
-                y_predict = self.forward(batch_data)
+                y_predict = self.forward(batch_data, train=True)
 
                 # 计算当前损失
                 loss = self.loss.calculate_loss(y_predict, batch_label)

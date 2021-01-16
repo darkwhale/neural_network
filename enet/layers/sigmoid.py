@@ -22,7 +22,7 @@ class Sigmoid(Layer):
         self.input_shape = input_shape
         self.output_shape = input_shape
 
-    def forward(self, input_signal):
+    def forward(self, input_signal, *args, **k_args):
         """
         前向运算
         :param input_signal: 输入数据
