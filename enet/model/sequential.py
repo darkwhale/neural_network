@@ -133,13 +133,12 @@ class Sequential(object):
 
     def predict(self, input_data=None):
         """
-        预测输出的概率
+        预测输出的值
         :param input_data: 输入数据
         :return:
         """
-        # 添加softmax层
-        output_signal = self.forward(input_data, train=False)
-        return softmax(output_signal)
+        # 添加softmax层？
+        return self.forward(input_data, train=False)
 
     def predict_class(self, input_data, class_dict=None):
         """

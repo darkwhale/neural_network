@@ -41,3 +41,14 @@ def shuffle_data_label(data, label):
     shuffle_index = np.random.permutation(len(data))
 
     return data[shuffle_index], label[shuffle_index]
+
+
+def get_ndim_except_last(input_array):
+    """
+    获取input_array的维度序列，除了最后一个维度
+    比如input_array为4维，则输出(0, 1, 2)
+    :param input_array: 输入numpy数组
+    :return:
+    """
+    ndim = input_array.ndim
+    return tuple(range(ndim)[: -1])
