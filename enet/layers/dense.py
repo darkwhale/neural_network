@@ -71,8 +71,6 @@ class Dense(Layer):
         :return: 误差回传
         """
 
-        # delta_b按照行方向求均值，delta_w除以样本数即可
-        # 此时样本数为 input_shape.shape[0]
         # if self.use_bias:
         #     delta_b = np.mean(delta, axis=0)
         # else:
