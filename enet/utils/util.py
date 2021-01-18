@@ -105,3 +105,42 @@ def col2img(image_col, kernel_size, padding_shape, stride):
                                                                                                        kernel_size[1],
                                                                                                        channel))
     return padding_image
+
+
+def tailor_border(input_signal, size):
+    """
+    裁剪边界， 当输入信号不能整除步长时，做适当裁剪
+    :param input_signal: 输入信号
+    :param size: 步长
+    :return:
+    """
+    height_pad = input_signal.shape[1] % size
+    width_pad = input_signal.shape[2] % size
+
+    if height_pad != 0 or width_pad != 0:
+        input_signal = input_signal[:, : input_signal.shape[1] - height_pad, : input_signal.shape[2] - width_pad, :]
+
+    return input_signal
+
+
+def add_border(signal, input_shape, size):
+    """
+    补充边界
+    :param signal: 信号
+    :param input_shape: 原图像shape
+    :param size: 步长
+    :return:
+    """
+    height_pad = input_shape[0] % size
+    width_pad = input_shape[1] % size
+
+    if height_pad != 0 or width_pad != 0:
+        signal = np.pad(signal,
+                        ((0, 0),
+                         (0, height_pad),
+                         (0, width_pad),
+                         (0, 0)),
+                        mode="constant"
+                        )
+
+    return signal

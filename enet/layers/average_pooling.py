@@ -3,12 +3,11 @@ from enet.utils import tailor_border, add_border
 import numpy as np
 
 
-class MaxPool2D(Layer):
+class AveragePool2D(Layer):
 
     def __init__(self, size=2):
-        super(MaxPool2D, self).__init__("max_pooling_2d")
+        super(AveragePool2D, self).__init__("average_pooling_2d")
         self.size = size
-        self.mask = None
 
     def build(self, input_shape=None):
         self.input_shape = input_shape
@@ -28,15 +27,12 @@ class MaxPool2D(Layer):
                                             self.size,
                                             input_signal.shape[3]
                                             )
-        output_signal = np.max(input_signal, axis=(2, 4))
-        self.mask = output_signal.repeat(repeats=self.size, axis=1).repeat(repeats=self.size, axis=2) != input_signal
+        output_signal = np.mean(input_signal, axis=(2, 4))
 
         return output_signal
 
     def backward(self, delta):
-        delta = delta.repeat(repeats=self.size, axis=1).repeat(repeats=self.size, axis=2)
 
-        delta[self.mask] = 0.
+        delta = delta.repeat(repeats=self.size, axis=1).repeat(repeats=self.size, axis=2) / (self.size * self.size)
 
         return add_border(delta, self.input_shape, self.size)
-
