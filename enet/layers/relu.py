@@ -9,9 +9,7 @@ class Relu(Layer):
     """
 
     def __init__(self):
-        super(Relu, self).__init__()
-
-        self.layer_type = "relu"
+        super(Relu, self).__init__(layer_type="relu")
 
     def build(self, input_shape):
         """

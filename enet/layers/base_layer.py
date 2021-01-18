@@ -6,12 +6,12 @@ class Layer(object):
     基础网络层
     """
 
-    def __init__(self):
+    def __init__(self, layer_type="layer"):
 
         self.input_shape = None
         self.output_shape = None
         self.weight_shape = None
-        self.layer_type = None
+        self.layer_type = layer_type
         self.activation = None
 
         self.cache = None

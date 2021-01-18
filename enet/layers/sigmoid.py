@@ -9,9 +9,7 @@ class Sigmoid(Layer):
     """
 
     def __init__(self):
-        super(Sigmoid, self).__init__()
-
-        self.layer_type = "sigmoid"
+        super(Sigmoid, self).__init__(layer_type="sigmoid")
 
     def build(self, input_shape):
         """

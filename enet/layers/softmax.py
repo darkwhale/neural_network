@@ -10,9 +10,7 @@ class Softmax(Layer):
     """
 
     def __init__(self):
-        super(Softmax, self).__init__()
-
-        self.layer_type = "softmax"
+        super(Softmax, self).__init__(layer_type="softmax")
 
     def build(self, input_shape):
         """

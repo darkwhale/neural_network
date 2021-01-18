@@ -18,15 +18,13 @@ class Dense(Layer):
         :param optimizer: 优化器；
         :param use_bias: 是否使用偏执，保留参数
         """
-        super(Dense, self).__init__()
+        super(Dense, self).__init__(layer_type="dense")
 
         assert activation in {None, "sigmoid", "relu", "softmax"}
         assert optimizer in {"sgd", "momentum", "adagrad", "adam", "rmsprop"}
 
         self.output_shape = kernel_size
         self.activation = activation
-
-        self.layer_type = "dense"
 
         # 该处的input_shape只在输入层有效,input_shape样式为(784,)
         if input_shape:

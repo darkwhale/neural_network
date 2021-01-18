@@ -89,31 +89,31 @@ class Sequential(object):
         current_layer_type = None
         for index, layer in enumerate(self.layer_list):
             if index == 0:
-                result_list.append("-" * 60)
+                result_list.append("-" * 100)
                 result_list.append("{}{}{}{}".format(
-                    "layer type".ljust(15),
-                    "input map".ljust(15),
-                    "output map".ljust(15),
+                    "layer type".ljust(35),
+                    "input map".ljust(25),
+                    "output map".ljust(25),
                     "weight shape".ljust(15)
                 ))
-                result_list.append("-" * 60)
+                result_list.append("-" * 100)
                 result_list.append("{}{}{}{}".format(
-                    "input_layer".ljust(15),
-                    normal_layer_map_shape(layer.get_input_shape()).ljust(15),
-                    normal_layer_map_shape(layer.get_input_shape()).ljust(15),
+                    "input_layer".ljust(35),
+                    normal_layer_map_shape(layer.get_input_shape()).ljust(25),
+                    normal_layer_map_shape(layer.get_input_shape()).ljust(25),
                     None
                 ))
             if current_layer_type != layer.get_layer_type():
-                result_list.append("-" * 60)
+                result_list.append("-" * 100)
             result_list.append("{}{}{}{}".format(
-                layer.get_layer_type().ljust(15),
-                normal_layer_map_shape(layer.get_input_shape()).ljust(15),
-                normal_layer_map_shape(layer.get_output_shape()).ljust(15),
+                layer.get_layer_type().ljust(35),
+                normal_layer_map_shape(layer.get_input_shape()).ljust(25),
+                normal_layer_map_shape(layer.get_output_shape()).ljust(25),
                 ", ".join(str(param) for param in layer.get_weight_shape()).ljust(15) if layer.get_weight_shape()
                 else "None"
             ))
 
-        result_list.append("-" * 60)
+        result_list.append("-" * 100)
         for result in result_list:
             print(result)
 
@@ -147,7 +147,7 @@ class Sequential(object):
         :param class_dict: 标签对应的种类字典，如果为空，则只输出标签
         :return: 预测标签
         """
-        output_signal = self.forward(input_data, train=False)
+        output_signal = self.predict(input_data)
 
         # 延列方向取最大的索引
         result_array = np.argmax(output_signal, axis=-1)

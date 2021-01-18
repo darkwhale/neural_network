@@ -14,9 +14,7 @@ class BatchNormalization(Layer):
         """
         :param momentum: 计算全局均值标准差时的冲量
         """
-        super(BatchNormalization, self).__init__()
-
-        self.layer_type = "batch_normalization"
+        super(BatchNormalization, self).__init__(layer_type="batch_normalization")
 
         self.decay = decay
 

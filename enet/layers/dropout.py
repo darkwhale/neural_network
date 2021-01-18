@@ -13,12 +13,10 @@ class Dropout(Layer):
         dropout层
         :param dropout_ratio:
         """
-        super(Dropout, self).__init__()
+        super(Dropout, self).__init__(layer_type="dropout")
 
         self.dropout_ratio = dropout_ratio
         self.mask = None
-
-        self.layer_type = "dropout"
 
     def build(self, input_shape):
         """
