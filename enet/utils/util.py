@@ -66,8 +66,8 @@ def img2col(image, kernel_size, stride):
     batch_size, height, width, channel = image.shape
     out_h, out_w = (height - kernel_size[0]) // stride + 1, (width - kernel_size[1]) // stride + 1
 
-    image_col = np.empty(shape=(batch_size, out_h * out_w, kernel_size[0] * kernel_size[1] * channel))
-    for i in range(0, out_h, stride):
+    image_col = np.zeros(shape=(batch_size, out_h * out_w, kernel_size[0] * kernel_size[1] * channel))
+    for i in range(out_h):
         h_min = i * stride
         h_max = i * stride + kernel_size[0]
         for j in range(out_w):

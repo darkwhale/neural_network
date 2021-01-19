@@ -26,7 +26,7 @@ class Conv2D(Layer):
         """
         super(Conv2D, self).__init__(layer_type="conv2d")
 
-        assert padding.lower() in {"same", "padding"}
+        assert padding.lower() in {"same", "valid"}
 
         self.filters = filters
 
@@ -127,6 +127,46 @@ class Conv2D(Layer):
                                         :]
 
         return output_delta
+
+    def alternative_backward(self, delta):
+        """
+        另一种反向传播方式
+        :param delta: 梯度
+        :return:
+        """
+        delta_col = delta.reshape((delta.shape[0], -1, self.filters))
+
+        delta_w = np.sum(np.matmul(self.cache.transpose(0, 2, 1), delta_col), axis=0).reshape(self.weight.shape)
+        delta_b = np.sum(delta_col, axis=(0, 1))
+
+        # 更新到优化器中
+        self.optimizer.grand(delta_w=delta_w, delta_b=delta_b)
+
+        # 该方式将传回来的梯度和权值矩阵的翻转结果作卷积运算
+        # 先填充delta, 若步长不为1，则需要将回传的梯度填充大小为步长为1的输出大小，其余位置填充0
+        if self.padding == "same":
+            back_per_stride_height, back_per_stride_width = self.input_shape[0], self.input_shape[1]
+        else:
+            back_per_stride_height, back_per_stride_width = self.input_shape[0] - self.kernel_size[0] + 1, \
+                                                            self.input_shape[1] - self.kernel_size[1] + 1
+
+        if self.strides != 1:
+            new_delta = np.zeros(shape=(delta.shape[0],
+                                        back_per_stride_height,
+                                        back_per_stride_width,
+                                        delta.shape[-1]))
+            new_delta[:, ::self.strides, ::self.strides, :] = delta
+            delta = new_delta
+
+        # weight, 然后输入通道和输出通道变换位置
+        flip_weight = np.flip(self.weight, axis=(0, 1)).swapaxes(2, 3).reshape((-1, self.input_shape[-1]))
+
+        # 梯度边界填充
+        pixel = [k_size // 2 if self.padding == "same" else k_size - 1 for k_size in self.kernel_size]
+        delta = np.pad(delta, ((0, 0), (pixel[0], pixel[0]), (pixel[1], pixel[1]), (0, 0)), mode="constant")
+        matrix_delta = img2col(delta, self.kernel_size, 1)
+
+        return np.dot(matrix_delta, flip_weight).reshape((delta.shape[0],) + self.input_shape)
 
     def update(self, lr):
         """
